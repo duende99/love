@@ -1,0 +1,303 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>我爱你</title>
+    <link type="image/x-icon" rel="shortcut icon" th:href="@{img/love.png}">
+    <link type="text/css" rel="stylesheet" th:href="@{index1_js_css/default.css}" >
+    <script type="text/javascript" th:src="@{js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{index1_js_css/garden.js}"></script>
+    <script type="text/javascript" th:src="@{index1_js_css/functions.js}"></script>
+    <script th:src="@{jscss/xin.js}" language="javascript" type="text/javascript"></script>
+    <style type="text/css">
+        @font-face {
+            font-family: digit;
+            src: url('index1_js_css/digital-7_mono.ttf') format("truetype");
+        }
+    </style>
+</head>
+<!--能动的文字jq-->
+<script type="text/javascript">
+    (function () {
+        var msg = "我爱你直到永远";
+        var size = 24;
+        var circleY = 0.75;
+        var circleX = 2;
+        var letter_spacing = 5;
+        var diameter = 10;
+        var rotation = 0.4;
+        var speed = 0.3;
+        if (!window.addEventListener && !window.attachEvent || !document.createElement) return;
+        msg = msg.split('');
+        var n = msg.length - 1, a = Math.round(size * diameter * 0.208333), currStep = 20,
+            ymouse = a * circleY + 20, xmouse = a * circleX + 20, y = [], x = [], Y = [], X = [],
+            o = document.createElement('div'), oi = document.createElement('div'),
+            b = document.compatMode && document.compatMode != "BackCompat" ? document.documentElement : document.body,
+            mouse = function (e) {
+                e = e || window.event;
+                ymouse = !isNaN(e.pageY) ? e.pageY : e.clientY; // y-position
+                xmouse = !isNaN(e.pageX) ? e.pageX : e.clientX; // x-position
+            },
+            makecircle = function () { // rotation/positioning
+                if (init.nopy) {
+                    o.style.top = (b || document.body).scrollTop + 'px';
+                    o.style.left = (b || document.body).scrollLeft + 'px';
+                }
+                currStep -= rotation;
+                for (var d, i = n; i > -1; --i) { // makes the circle
+                    d = document.getElementById('iemsg' + i).style;
+                    d.top = Math.round(y[i] + a * Math.sin((currStep + i) / letter_spacing) * circleY - 15) + 'px';
+                    d.left = Math.round(x[i] + a * Math.cos((currStep + i) / letter_spacing) * circleX) + 'px';
+                }
+            },
+            drag = function () { // makes the resistance
+                y[0] = Y[0] += (ymouse - Y[0]) * speed;
+                x[0] = X[0] += (xmouse - 20 - X[0]) * speed;
+                for (var i = n; i > 0; --i) {
+                    y[i] = Y[i] += (y[i - 1] - Y[i]) * speed;
+                    x[i] = X[i] += (x[i - 1] - X[i]) * speed;
+                }
+                makecircle();
+            },
+            init = function () { // appends message divs, & sets initial values for positioning arrays
+                if (!isNaN(window.pageYOffset)) {
+                    ymouse += window.pageYOffset;
+                    xmouse += window.pageXOffset;
+                } else init.nopy = true;
+                for (var d, i = n; i > -1; --i) {
+                    d = document.createElement('div');
+                    d.id = 'iemsg' + i;
+                    d.style.height = d.style.width = a + 'px';
+                    d.appendChild(document.createTextNode(msg[i]));
+                    oi.appendChild(d);
+                    y[i] = x[i] = Y[i] = X[i] = 0;
+                }
+                o.appendChild(oi);
+                document.body.appendChild(o);
+                setInterval(drag, 25);
+            },
+            ascroll = function () {
+                ymouse += window.pageYOffset;
+                xmouse += window.pageXOffset;
+                window.removeEventListener('scroll', ascroll, false);
+            };
+        o.id = 'outerCircleText';
+        o.style.fontSize = size + 'px';
+        if (window.addEventListener) {
+            window.addEventListener('load', init, false);
+            document.addEventListener('mouseover', mouse, false);
+            document.addEventListener('mousemove', mouse, false);
+            if (/Apple/.test(navigator.vendor))
+                window.addEventListener('scroll', ascroll, false);
+        } else if (window.attachEvent) {
+            window.attachEvent('onload', init);
+            document.attachEvent('onmousemove', mouse);
+        }
+    })();
+
+    //--创建页面监听，等待微信端页面加载完毕 触发音频播放
+    // document.addEventListener('WeixinJSBridgeReady', function() {
+    //     document.getElementById('VideoId2').play()
+    // })
+</script>
+<!--能动的文字css-->
+<style type="text/css">
+    #outerCircleText {
+        font-style: italic;
+        font-weight: bold;
+        font-family: 'comic sans ms', verdana, arial;
+        color: #ff0000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3000;
+        cursor: default;
+    }
+
+    #outerCircleText div {
+        position: relative;
+    }
+
+    #outerCircleText div div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-align: center;
+    }
+</style>
+<body>
+<!--音乐-->
+<audio autoplay="autopaly"  id="VideoId2">
+    <source th:src="@{music/MarryYou.mp3}" type="audio/mp3" />
+</audio>
+
+<!--背景音乐-->
+<div>
+    <embed th:src="@{music/MarryYou.mp3}" hidden="true" autostart="true" loop="true">
+</div>
+<!--文字显示-->
+<div id="mainDiv">
+    <div id="flower_wrap" ></div>
+    <div id="content">
+        <div id="code">
+            <span class="comments">我的宝宝</span><br/>
+            <span class="space"/><span class="comments">我会牵着你的手，走到我们满头白发的那一天</span><br/>
+            <span class="space"/><span class="comments">我会守护你生命里的精彩，并陪伴你一路精彩下去</span><br/>
+            <span class="space"/><span class="comments">你的幸福快乐，是我一生的追求</span><br/>
+            <span class="space"/>我希望以后的每天都可以<br/>
+            <span class="space"/>带着笑脸，和你说早安<br/>
+            <span class="space"/>每一晚与你道声晚安再入梦乡<br/>
+            <span class="space"/>我想和你去世界的各个地方<br/>
+            <span class="space"/>陪你看风景，陪你拍照<br/>
+            <span class="space"/>历经你生命中所有的点点滴滴<br/>
+            <span class="space"/>我期待这一生与你一起走过<br/>
+            <span class="space"/>走到尽头再回头看尽一生铅华满地<br/>
+            <span class="space"/>我期待与你慢慢变老<br/>
+            <span class="space"/>等我们老到哪儿也去不了<br/>
+            <span class="space"/>我依然 把你当成手心里的宝<br/>
+            <span class="keyword"/>&nbsp;我会为我们的未来撑起一片天空<br/>
+            <span class="space"/>为我们的将来担负起一生的责任<br/>
+            <span class="space"/>愿意为你去做每一件能让你开心快乐的事<br/>
+            <span class="space"/>我们所有经历的点点滴滴<br/>
+            <span class="space"/>都是我们一辈子最美的回忆<br/>
+            <span class="space"/>爱你，永远<br/>
+            <span class="space"/>--点击我的名字--<a href="index2" style="text-decoration:blink">duende</a> <br/>
+            <br/>
+        </div>
+        <div id="loveHeart">
+            <canvas id="garden"></canvas>
+            <div id="words">
+                <div id="messages">
+                    翠英宝宝,我爱你！
+                    <div id="elapseClock"></div>
+                </div>
+                <div id="loveu">
+                    Love you forever and ever.<br/>
+
+                    <div class="signature">- duende</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--飘花瓣-->
+<!--下面是浮动的桃心-->
+<div id="bubbles" style="visibility:hidden">
+    <img th:src="@{jscss/1.png}">
+    <img th:src="@{jscss/2.png}">
+    <img th:src="@{jscss/1.png}">
+</div>
+<!--主体-->
+<script type="text/javascript">
+    var offsetX = $("#loveHeart").width() / 2;
+    var offsetY = $("#loveHeart").height() / 2 - 55;
+    var together = new Date();
+    together.setFullYear(2020, 07, 10);
+    together.setHours(0);
+    together.setMinutes(0);
+    together.setSeconds(0);
+    together.setMilliseconds(0);
+
+    if (!document.createElement('canvas').getContext) {
+        var msg = document.createElement("div");
+        msg.id = "errorMsg";
+        msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+";
+        document.body.appendChild(msg);
+        $("#code").css("display", "none");
+        $("#copyright").css("position", "absolute");
+        $("#copyright").css("bottom", "10px");
+        document.execCommand("stop");
+    } else {
+        setTimeout(function () {
+            startHeartAnimation();
+        }, 5000);
+
+        timeElapse(together);
+        setInterval(function () {
+            timeElapse(together);
+        }, 500);
+
+        adjustCodePosition();
+        $("#code").typewriter();
+    }
+</script>
+<!--飘花瓣JQ-->
+<script>
+    $(function () {
+        flowerDrop();
+    });
+
+    //花瓣飘落动画方法
+    function flowerDrop() {
+        var width = $("#mainDiv").width();
+        var height = $("#mainDiv").height() + 150;
+        //存放6种花瓣图片位置百分比
+        var flowersPos = ["0", "20%", "40%", "60%", "80", "100%"];
+        // 获取花瓣容器
+        var $flowerContainer = $("#flower_wrap");
+        var flowerUrl = "img/flower.png";
+
+        // 随机获取花瓣图片url
+        function getFlowerPos() {
+            return flowersPos[Math.floor(Math.random() * 6)];
+        }
+
+        //花瓣盒子宽高
+        var flowerBoxWidth = width * 0.0285;
+        var flowerBoxHeight = height * 0.0456;
+
+        // 创建一个花瓣元素，添加旋转类
+        function createFlowerBox() {
+            var pos = getFlowerPos();
+            return $('<div class="flowerBox"></div>').css({
+                "width": flowerBoxWidth + "px",
+                "height": flowerBoxHeight + "px",
+                "position": "absolute",
+                "zIndex": 1000,
+                "top": -flowerBoxHeight + "px",
+                "backgroundImage": "url(" + flowerUrl + ")",
+                "backgroundRepeat": "no-repeat",
+                "backgroundSize": "600% 100%",
+                "backgroundPosition": pos + " 0"
+            }).addClass("flowerRotate");
+        }
+
+        // 开始飘花
+        setInterval(function () {
+            // 运动轨迹随机
+            var startPositionLeft = Math.random() * width - 100,
+                startOpacity = 1,
+                endPositionTop = height - 40,
+                endPositionLeft = startPositionLeft - 100 + Math.random() * 500,
+                duration = height * 10 + Math.random() * 5000;
+
+            // 随机透明度，不小于0.5
+            var randomStart = Math.random();
+            randomStart = randomStart < 0.5 ? startOpacity : randomStart;
+
+            // 创建一个花瓣
+            var $flower = createFlowerBox();
+            // 设计起点位置
+            $flower.css({
+                left: startPositionLeft + "px",
+                opacity: randomStart
+            });
+            // 加入到容器
+            $flowerContainer.append($flower);
+            // 开始执行动画
+            $flower.animate({
+                top: endPositionTop + "px",
+                left: endPositionLeft + "px",
+                opacity: 0.7
+            }, duration, function () {
+                $(this).animate({
+                    opacity: 0
+                }, 1000, function () {
+                    $(this).remove(); //结束后删除
+                });
+            });
+
+        }, 300);
+    }
+</script>
+</body>
+</html>
